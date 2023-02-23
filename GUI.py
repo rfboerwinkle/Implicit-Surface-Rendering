@@ -1,3 +1,4 @@
+import sys
 import math
 import time
 import tkinter as tk
@@ -34,85 +35,83 @@ SETS_WINDOW_SIZE = "400x405"
 SETS_ORDER = ("fov", "resolution", "theta", "phi", "x", "y", "z", "threshold")
 SETS_TYPES = (float, int, float, float, float, float, float, float)
 
-FONT_SIZE = 20
-WINDOW_SIZE = "500x500";
-DEFAULT_FLAVOR = "LaTeX"
-DEFAULT_FUNC = "(X-3) \cdot Y \cdot Z";
-CamInfo = {
-	"fov": 140 / 180 * math.pi,
-	"resolution": 200,
-	"theta": 45 * math.pi / 180,
-	"phi": 5 * math.pi / 180,
-	"x": 0,
-	"y": 0,
-	"z": 0,
-	"threshold": -0.1,
-}
+if len(sys.argv) >= 2:
+	choice = sys.argv[1]
+else:
+	choice = "0"
 
-# eggcrate
-#FONT_SIZE = 20
-#DEFAULT_FLAVOR = "LaTeX"
-#DEFAULT_FUNC = "np.sin(X) * np.sin(Y) * np.sin(Z)"
-#CamInfo = {
-#	"fov": 140 / 180 * math.pi,
-#	"resolution": 600,
-#	"theta": 45 * math.pi / 180,
-#	"phi": 5 * math.pi / 180,
-#	"x": math.pi / 2,
-#	"y": math.pi / 2,
-#	"z": math.pi / 2,
-#	"threshold": 0.2,
-#}
+if choice == "0":
+	# default
+	FONT_SIZE = 20
+	WINDOW_SIZE = "500x500";
+	DEFAULT_FLAVOR = "LaTeX"
+	DEFAULT_FUNC = "(X-3) \cdot Y \cdot Z";
+	CamInfo = {
+		"fov": 140 / 180 * math.pi,
+		"resolution": 200,
+		"theta": 45 * math.pi / 180,
+		"phi": 5 * math.pi / 180,
+		"x": 0,
+		"y": 0,
+		"z": 0,
+		"threshold": -0.1,
+	}
 
-# boxes
-#FONT_SIZE = 20
-#WINDOW_SIZE = "1000x1000";
-#DEFAULT_FLAVOR = "LaTeX"
-#DEFAULT_FUNC = "(X-3) \cdot Y \cdot Z";
-#CamInfo = {
-#	"fov": 140 / 180 * math.pi,
-#	"resolution": 800,
-#	"theta": 45 * math.pi / 180,
-#	"phi": 5 * math.pi / 180,
-#	"x": 0,
-#	"y": 0,
-#	"z": 0,
-#	"threshold": -0.1,
-#}
+elif choice == "1":
+	# eggcrate
+	FONT_SIZE = 20
+	WINDOW_SIZE = "1100x900"
+	DEFAULT_FLAVOR = "Python"
+	DEFAULT_FUNC = "np.sin(X) * np.sin(Y) * np.sin(Z)"
+	CamInfo = {
+		"fov": 140 / 180 * math.pi,
+		"resolution": 600,
+		"theta": 45 * math.pi / 180,
+		"phi": 5 * math.pi / 180,
+		"x": math.pi / 2,
+		"y": math.pi / 2,
+		"z": math.pi / 2,
+		"threshold": -0.2,
+	}
 
-# pebbles
-#FONT_SIZE = 20
-#WINDOW_SIZE = "1100x900";
-#DEFAULT_FLAVOR = "LaTeX"
-#DEFAULT_FUNC = "((Z+3)^2 + Y^2)\\frac{(X+11)^3}{20} - 3\\sin((X+11)^{2})"
-#CamInfo = {
-#	"theta": 3.68,
-#	"phi": 0,
-#	"fov": 140 / 180 * math.pi,
-#	"resolution": 600,
-#	"x": 0,
-#	"y": 0,
-#	"z": 0,
-#	"threshold": 1.2,
-#}
+elif choice == "2":
+	# pebbles
+	FONT_SIZE = 20
+	WINDOW_SIZE = "1100x900"
+	DEFAULT_FLAVOR = "LaTeX"
+	DEFAULT_FUNC = "((Z+3)^2 + Y^2)\\frac{(X+11)^3}{20} - 3\\sin((X+11)^{2})"
+	CamInfo = {
+		"theta": 3.68,
+		"phi": 0,
+		"fov": 140 / 180 * math.pi,
+		"resolution": 600,
+		"x": 0,
+		"y": 0,
+		"z": 0,
+		"threshold": 1.2,
+	}
 
-# cylinder
-#FONT_SIZE = 20
-#WINDOW_SIZE = "900x900";
-#DEFAULT_FLAVOR = "Python"
-#DEFAULT_FUNC = "sqrt(X**2 + (Y+1)**8 + Z**2)"
-##DEFAULT_FUNC = "\\sqrt{(X-0)^2 + (Y+2)^8 + Z^2}"
-#CamInfo = {
-#	"theta": 1.58539,
-#	"phi": 0.587266,
-#	"fov": 80 / 180 * math.pi,
-#	"resolution": 600,
-#	"x": -3,
-#	"y": 2,
-#	"z": 0,
-#	"threshold": 0.5,
-#}
+elif choice == "3":
+	# cylinder
+	FONT_SIZE = 20
+	WINDOW_SIZE = "900x900";
+	DEFAULT_FLAVOR = "Python"
+	DEFAULT_FUNC = "sqrt(X**2 + (Y+1)**8 + Z**2)"
+	#DEFAULT_FUNC = "\\sqrt{(X-0)^2 + (Y+2)^8 + Z^2}"
+	CamInfo = {
+		"theta": 1.58539,
+		"phi": 0.587266,
+		"fov": 80 / 180 * math.pi,
+		"resolution": 600,
+		"x": -3,
+		"y": 2,
+		"z": 0,
+		"threshold": 0.5,
+	}
 
+else:
+	print("unknown argument:", choice)
+	quit()
 
 def setCamAttributes():
 	global Cam
@@ -260,6 +259,17 @@ def render(_=None):
 	setStatusBar(status)
 	updateSize()
 
+# the _=None is to make it work as an event handler
+def warningMenu(_=None):
+	global Window
+	global FONT
+	global StatusBar
+	warnWindow = tk.Toplevel(Window)
+#	warnWindow.geometry(WARN_WINDOW_SIZE)
+	warnWindow.title("diagnostics")
+	text = StatusBar.get("1.0", tk.END)
+	tk.Label(warnWindow, font=FONT, text=text).pack()
+
 def settingsMenu():
 	global SetsWindow
 	if SetsWindow.winfo_exists():
@@ -317,7 +327,9 @@ SetsWindow.destroy()
 DisplayFrame = tk.Frame(Window)
 
 StatusBar = tk.Text(DisplayFrame, height=1, font=FONT)
+StatusBar.configure(selectbackground=StatusBar.cget('bg'), inactiveselectbackground=StatusBar.cget('bg'))
 StatusBar.pack(side=tk.TOP, fill=tk.X)
+StatusBar.bind("<Button-1>", warningMenu)
 
 ViewPort = tk.Text(DisplayFrame, height=1)
 ViewPort.configure(selectbackground=ViewPort.cget('bg'), inactiveselectbackground=ViewPort.cget('bg'))

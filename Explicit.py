@@ -3,11 +3,17 @@ from numpy import *
 import sympy as sp
 from process_latex import process_sympy
 import Newton
+import sys
+import os
 
 class UserFunc:
 
 	def LaTeX2Python(func):
+		sys.stdout = open(os.devnull, "w") # this ...
 		a = str(process_sympy(func))
+		sys.stdout = sys.__stdout__ # ... and this are to prevent printing
+		# otherwise you get this error:
+		# ANTLR runtime and generated code versions disagree: 4.9.1!=4.7.2
 		return a
 
 #	def __init__(self, LaTeX=None, Python=None, bounds=((np.NINF, np.inf), (np.NINF, np.inf), (np.NINF, np.inf))):
